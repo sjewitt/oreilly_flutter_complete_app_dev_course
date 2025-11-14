@@ -35,102 +35,102 @@ class UTip extends StatefulWidget {
 }
 
 class _UTipState extends State<UTip> {
-  int personCount = 0;
-  String now = "";
-  double sliderval = 0.0;
-  double sliderPos = 0;
-  double tipPercentPerPerson = 0;
-  double tipPerPerson = 0;
-  double tipTotal = 0;
-  double costPerPerson = 0;
-  double totalCost = 0.0;
+  // int personCount = 0;
+  // String now = "";
+  // double sliderval = 0.0;
+  // double sliderPos = 0;
+  // double tipPercentPerPerson = 0;
+  // double tipPerPerson = 0;
+  // double tipTotal = 0;
+  // double costPerPerson = 0;
+  // double totalCost = 0.0;
 
-  // see https://medium.com/@varsha.vikshith.tech/format-currency-like-a-pro-in-dart-flutter-15a183668241
-  String finalCostPerPersonOutput = "0.00";
-  String finalTipPerPersonOutput = "0.00";
-  String finalTipTotalOutput = "0.00";
+  // // see https://medium.com/@varsha.vikshith.tech/format-currency-like-a-pro-in-dart-flutter-15a183668241
+  // String finalCostPerPersonOutput = "0.00";
+  // String finalTipPerPersonOutput = "0.00";
+  // String finalTipTotalOutput = "0.00";
 
   // TODO: https://stackoverflow.com/questions/48836636/how-to-use-functions-of-another-file-in-dart-flutter
 
-  // person counter handlers:
-  void decrementCounter() {
-    setState(() {
-      if (personCount > 1) personCount--;
-      handleBillAmount(totalCost);
-    });
-  }
+  // // person counter handlers:
+  // void decrementCounter() {
+  //   setState(() {
+  //     if (personCount > 1) personCount--;
+  //     handleBillAmount(totalCost);
+  //   });
+  // }
 
-  void incrementCounter() {
-    setState(() {
-      personCount++;
-      handleBillAmount(totalCost);
-    });
-  }
+  // void incrementCounter() {
+  //   setState(() {
+  //     personCount++;
+  //     handleBillAmount(totalCost);
+  //   });
+  // }
 
-  void setSomething() {
-    setState(() {
-      now = DateTime.now().toIso8601String();
-    });
-  }
+  // void setSomething() {
+  //   setState(() {
+  //     now = DateTime.now().toIso8601String();
+  //   });
+  // }
 
-  void setSliderValue(sliderValue) {
-    setState(() {
-      debugPrint("setting to sliderValue of: $sliderValue...");
-      tipPercentPerPerson = sliderPos = sliderValue;
-      handleBillAmount(totalCost);
-    });
-  }
+  // void setSliderValue(sliderValue) {
+  //   setState(() {
+  //     debugPrint("setting to sliderValue of: $sliderValue...");
+  //     tipPercentPerPerson = sliderPos = sliderValue;
+  //     handleBillAmount(totalCost);
+  //   });
+  // }
 
-  // course equivalents, for comparison (add logging to check):
-  double totalPerPerson() {
-    double _total =
-        ((totalCost * (tipPercentPerPerson / 100)) + (totalCost)) /
-        (personCount);
-    return (_total);
-  }
+  // // course equivalents, for comparison (add logging to check):
+  // double totalPerPerson() {
+  //   double _total =
+  //       ((totalCost * (tipPercentPerPerson / 100)) + (totalCost)) /
+  //       (personCount);
+  //   return (_total);
+  // }
 
-  double totalTip() {
-    double _tip = ((totalCost * tipPercentPerPerson) / 100);
-    return (_tip);
-  }
+  // double totalTip() {
+  //   double _tip = ((totalCost * tipPercentPerPerson) / 100);
+  //   return (_tip);
+  // }
 
-  void handleBillAmount(totalBillAmount) {
-    setState(() {
-      if (totalBillAmount is String) {
-        totalBillAmount = double.parse(totalBillAmount);
-      }
+  // void handleBillAmount(totalBillAmount) {
+  //   setState(() {
+  //     if (totalBillAmount is String) {
+  //       totalBillAmount = double.parse(totalBillAmount);
+  //     }
 
-      if (totalBillAmount != null) {
-        totalCost = totalBillAmount;
-        if (personCount > 0) {
-          costPerPerson = totalBillAmount / personCount;
-          tipTotal =
-              totalBillAmount * (sliderPos / 100); // added to account for 6.22
-          tipPerPerson = (totalBillAmount * (sliderPos / 100)) / personCount;
-        }
-      } else {
-        tipPerPerson = 0.0;
-        tipTotal = 0.0;
-      }
+  //     if (totalBillAmount != null) {
+  //       totalCost = totalBillAmount;
+  //       if (personCount > 0) {
+  //         costPerPerson = totalBillAmount / personCount;
+  //         tipTotal =
+  //             totalBillAmount * (sliderPos / 100); // added to account for 6.22
+  //         tipPerPerson = (totalBillAmount * (sliderPos / 100)) / personCount;
+  //       }
+  //     } else {
+  //       tipPerPerson = 0.0;
+  //       tipTotal = 0.0;
+  //     }
 
-      final formatCurrency = NumberFormat.simpleCurrency(locale: "en_GB");
+  //     final formatCurrency = NumberFormat.simpleCurrency(locale: "en_GB");
 
-      finalTipPerPersonOutput = formatCurrency.format(tipPerPerson);
-      finalTipTotalOutput = formatCurrency.format(tipTotal);
-      finalCostPerPersonOutput = formatCurrency.format(
-        costPerPerson + tipPerPerson,
-      );
+  //     finalTipPerPersonOutput = formatCurrency.format(tipPerPerson);
+  //     finalTipTotalOutput = formatCurrency.format(tipTotal);
+  //     finalCostPerPersonOutput = formatCurrency.format(
+  //       costPerPerson + tipPerPerson,
+  //     );
 
-      // course method
-      totalPerPerson();
-    });
-  }
+  //     // course method
+  //     totalPerPerson();
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     // from course material, for comparison (see console logs):
-    double total = totalPerPerson();
+    double totalPP = totalPerPerson();
     double totalT = totalTip();
 
     final style = theme.textTheme.titleMedium!.copyWith(
