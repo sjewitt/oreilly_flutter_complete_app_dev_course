@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:utip/providers/theme_provider.dart';
 import 'package:utip/providers/tip_calculator_model.dart';
 import 'package:utip/widgets/bill_amt_text_field.dart';
 import 'package:utip/widgets/person_counter.dart';
@@ -11,12 +12,38 @@ import 'package:utip/widgets/total_per_person_header.dart';
 
 void main() {
   // as before, we need to wrap this in a change notifier:
+
+  // for #7.8 theme provider, we need another change notifier provider...
+  // so how do we add > 1 provider to the context?
+  // we need to wrap the changenotifierprovider with a MULTIPROVIDER widget:
   runApp(
-    ChangeNotifierProvider(
-      // why does he remove the BuildContext type here? It works anyway with
-      // that included...
-      create: (context) => TipCalculatorModel(),
+    MultiProvider(
+      providers: [
+        // Provider<Something>(create: (_) => Something()),
+        // from tooltip hint:
+        // Provider<TipCalculatorModel>(create: (context) => TipCalculatorModel(),),
+        // Provider<ThemeProvider>(create: (context) => ThemeProvider(),)
+        // from course:
+        ChangeNotifierProvider(create: (context) => TipCalculatorModel()),
+        ChangeNotifierProvider(create: (context) => ThemeProvider()),
+      ],
+      // from course:
       child: const MyApp(),
+      // child: ChangeNotifierProvider(
+      //   // why does he remove the BuildContext type here? It works anyway with
+      //   // that included...
+      //   create: (context) => TipCalculatorModel(),
+      //   child: const MyApp(),
+      // ),
+      // builder: (context, child){
+      //   final
+      // },
+      // child: ChangeNotifierProvider(
+      //   // why does he remove the BuildContext type here? It works anyway with
+      //   // that included...
+      //   create: (context) => TipCalculatorModel(),
+      //   child: const MyApp(),
+      // ),
     ),
     // const MyApp()
   );
@@ -27,12 +54,23 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final toplevelTheme = Provider.of<ThemeProvider>(context);
     return MaterialApp(
       title: 'UTip App',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+
+      // for light/dark mode bit, he changes this theme setup to:
+      // theme: ThemeData(
+      //   colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+      //   useMaterial3: true,
+      // ),
+      // he also notes the scope problem with - for me - `providerOfTheme`, so
+      // he copies to here - but it can be a different var:
+      theme: toplevelTheme.currentTheme,
+      // so we probably don't need the programmatic one below.
+      // actually we DO, the one here is just reading, whereas the one
+      // below provides the actual logic.
+      // but I probably don't need the stylimng bit I added...
+      // No I don't...
       home: const UTip(),
     );
   }
@@ -47,96 +85,9 @@ class UTip extends StatefulWidget {
 
 class _UTipState extends State<UTip> {
   int personCount = 0;
-  // String now = "";
-  // double sliderval = 0.0;
-  // double sliderPos = 0;
-  // double tipPercentPerPerson = 0;
-  // double tipPerPerson = 0;
-  // double tipTotal = 0;
-  // double costPerPerson = 0;
-  // double totalCost = 0.0;
 
-  // // see https://medium.com/@varsha.vikshith.tech/format-currency-like-a-pro-in-dart-flutter-15a183668241
-  // String finalCostPerPersonOutput = "0.00";
-  // String finalTipPerPersonOutput = "0.00";
-  // String finalTipTotalOutput = "0.00";
-
-  // TODO: https://stackoverflow.com/questions/48836636/how-to-use-functions-of-another-file-in-dart-flutter
-
-  // // person counter handlers:
-  // void decrementCounter() {
-  //   setState(() {
-  //     if (personCount > 1) personCount--;
-  //     handleBillAmount(totalCost);
-  //   });
-  // }
-
-  // void incrementCounter() {
-  //   setState(() {
-  //     personCount++;
-  //     handleBillAmount(totalCost);
-  //   });
-  // }
-
-  // void setSomething() {
-  //   setState(() {
-  //     now = DateTime.now().toIso8601String();
-  //   });
-  // }
-
-  // not really part of the model
-  // void setSliderValue(sliderValue) {
-  //   setState(() {
-  //     debugPrint("setting to sliderValue of: $sliderValue...");
-  //     tipPercentPerPerson = sliderPos = sliderValue;
-  //     handleBillAmount(totalCost);
-  //   });
-  // }
-
-  // // course equivalents, for comparison (add logging to check):
-  // double totalPerPerson() {
-  //   double _total =
-  //       ((totalCost * (tipPercentPerPerson / 100)) + (totalCost)) /
-  //       (personCount);
-  //   return (_total);
-  // }
-
-  // double totalTip() {
-  //   double _tip = ((totalCost * tipPercentPerPerson) / 100);
-  //   return (_tip);
-  // }
-
-  // void handleBillAmount(totalBillAmount) {
-  //   setState(() {
-  //     if (totalBillAmount is String) {
-  //       totalBillAmount = double.parse(totalBillAmount);
-  //     }
-
-  //     if (totalBillAmount != null) {
-  //       totalCost = totalBillAmount;
-  //       if (personCount > 0) {
-  //         costPerPerson = totalBillAmount / personCount;
-  //         tipTotal =
-  //             totalBillAmount * (sliderPos / 100); // added to account for 6.22
-  //         tipPerPerson = (totalBillAmount * (sliderPos / 100)) / personCount;
-  //       }
-  //     } else {
-  //       tipPerPerson = 0.0;
-  //       tipTotal = 0.0;
-  //     }
-
-  //     final formatCurrency = NumberFormat.simpleCurrency(locale: "en_GB");
-
-  //     finalTipPerPersonOutput = formatCurrency.format(tipPerPerson);
-  //     finalTipTotalOutput = formatCurrency.format(tipTotal);
-  //     finalCostPerPersonOutput = formatCurrency.format(
-  //       costPerPerson + tipPerPerson,
-  //     );
-
-  //     // course method
-  //     totalPerPerson();
-  //   });
-  // }
+  // switch test
+  bool _testSwitchVal = false;
 
   @override
   Widget build(BuildContext context) {
@@ -145,6 +96,13 @@ class _UTipState extends State<UTip> {
 
     // and here, I could use the provider.of() ??
     final providerOfUTIPModel = Provider.of<TipCalculatorModel>(context);
+
+    // and from the multiprovider list above, we can instantiate another
+    // provider - a Theme provider in this case:
+    final providerOfTheme = Provider.of<ThemeProvider>(context);
+    debugPrint("${providerOfTheme.currentTheme}");
+    debugPrint("${providerOfTheme.currentTheme.colorScheme}");
+
     double totalPP = providerOfUTIPModel.totalPP;
     double totalT = providerOfUTIPModel.totalT;
 
@@ -154,7 +112,43 @@ class _UTipState extends State<UTip> {
     );
 
     return Scaffold(
-      appBar: AppBar(title: const Text("UTip")),
+      appBar: AppBar(
+        title: const Text("UTip"),
+        actions: [
+          // he adds an IconButton instead:
+          IconButton(
+            iconSize: 40,
+            onPressed: providerOfTheme.toggleDarkMode,
+            // can I do a function here to return an Icon?
+            //// yes, use a ternary operator here from ThemeProvider:
+            icon: providerOfTheme.isDarkMode
+                ? Icon(Icons.nightlight_outlined)
+                : Icon(Icons.wb_sunny_outlined),
+            // Icon(Icons.wb_sunny_outlined,
+          ),
+          Switch(
+            onChanged: (newVal) {
+              setState(() {
+                _testSwitchVal = !_testSwitchVal;
+                // if (_testSwitchVal)
+                //   _testSwitchVal = false;
+                // else
+                //   _testSwitchVal = true;
+                // and update the value
+                _testSwitchVal = newVal;
+              });
+              //or:
+              // onChanged: providerOfTheme.toggleDarkMode, // and THIS is why you changed to an icon switch instead...
+            },
+            padding: EdgeInsets.all(20),
+            value: _testSwitchVal,
+          ),
+          Text("$_testSwitchVal"),
+
+          // iconSize: 50,
+          // ),
+        ],
+      ),
 
       body: //Container(
           //child: // here, add the Consumer and wrap around the Column, as everything is inside this
@@ -168,6 +162,7 @@ class _UTipState extends State<UTip> {
                     children: [
                       TotalPerPersonHeader(
                         theme: theme,
+                        // theme: providerOfTheme.currentTheme,
                         style: style,
                         finalCostPerPersonOutput:
                             tipModel.finalCostPerPersonOutput,
@@ -196,6 +191,7 @@ class _UTipState extends State<UTip> {
 
                               PersonCounter(
                                 theme: theme,
+                                // theme: providerOfTheme.currentTheme,
                                 personCount: tipModel.personCount,
                                 onDecrement: tipModel.decrementCounter,
                                 onIncrement: tipModel.incrementCounter,
@@ -218,6 +214,7 @@ class _UTipState extends State<UTip> {
 
                               TipTotalAmount(
                                 theme: theme,
+                                // theme: providerOfTheme.currentTheme,
                                 finalTipTotalOutput:
                                     tipModel.finalTipTotalOutput,
                               ),
