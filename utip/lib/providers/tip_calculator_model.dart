@@ -34,6 +34,9 @@ class TipCalculatorModel extends ChangeNotifier {
   double get tipPerPerson => _tipPerPerson;
   double get tipTotal => _tipTotal;
   double get costPerPerson => _costPerPerson;
+  // double get costPerPerson =>
+  //     ((_totalCost * (_tipPercentPerPerson / 100)) + (_totalCost)) /
+  //     (_personCount);
   double get totalCost => _totalCost;
   String get finalCostPerPersonOutput => _finalCostPerPersonOutput;
   String get finalTipPerPersonOutput => _finalTipPerPersonOutput;
@@ -49,47 +52,62 @@ class TipCalculatorModel extends ChangeNotifier {
   void decrementCounter() {
     if (_personCount > 1) _personCount--;
     handleBillAmount(totalCost);
+    notifyListeners();
   }
 
   void incrementCounter() {
     _personCount++;
     handleBillAmount(_totalCost);
+    notifyListeners();
   }
 
   void setSliderValue(sliderValue) {
     debugPrint("setting to sliderValue of: $sliderValue...");
     _tipPercentPerPerson = _sliderPos = sliderValue;
     handleBillAmount(_totalCost);
+    notifyListeners();
   }
 
   // These need to convert to getters
   // course equivalents, for comparison (add logging to check):
+  // the getter may also directly return the calculation:
+  //
   void totalPerPerson() {
     _totalPP =
         ((_totalCost * (_tipPercentPerPerson / 100)) + (_totalCost)) /
         (_personCount);
+    notifyListeners();
   }
 
   void totalTip() {
     _totalT = ((_totalCost * _tipPercentPerPerson) / 100);
+    notifyListeners();
   }
 
   void handleBillAmount(totalBillAmount) {
-    if (totalBillAmount is String) {
-      totalBillAmount = double.parse(totalBillAmount);
-    }
-
-    if (totalBillAmount != null) {
-      _totalCost = totalBillAmount;
-      if (personCount > 0) {
-        _costPerPerson = totalBillAmount / personCount;
-        _tipTotal =
-            totalBillAmount * (_sliderPos / 100); // added to account for 6.22
-        _tipPerPerson = (totalBillAmount * (_sliderPos / 100)) / _personCount;
+    try {
+      if (totalBillAmount is String) {
+        totalBillAmount = double.parse(totalBillAmount);
       }
-    } else {
-      _tipPerPerson = 0.0;
-      _tipTotal = 0.0;
+
+      if (totalBillAmount != null) {
+        _totalCost = totalBillAmount;
+        if (personCount > 0) {
+          _costPerPerson = totalBillAmount / personCount;
+          _tipTotal =
+              totalBillAmount * (_sliderPos / 100); // added to account for 6.22
+          _tipPerPerson = (totalBillAmount * (_sliderPos / 100)) / _personCount;
+        }
+      } else {
+        _tipPerPerson = 0.0;
+        _tipTotal = 0.0;
+      }
+    } on TypeError catch (err) {
+      debugPrint(err.toString());
+      totalBillAmount = 0;
+    } on Exception catch (err) {
+      debugPrint(err.toString());
+      totalBillAmount = 0;
     }
 
     final formatCurrency = NumberFormat.simpleCurrency(locale: "en_GB");
@@ -102,5 +120,6 @@ class TipCalculatorModel extends ChangeNotifier {
 
     // course method
     totalPerPerson();
+    notifyListeners();
   }
 }
