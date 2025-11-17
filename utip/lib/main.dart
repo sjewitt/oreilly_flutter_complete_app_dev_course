@@ -1,6 +1,8 @@
 // see https://stackoverflow.com/questions/75097840/is-double-and-double-are-different-thing-in-dart-and-if-it-is-can-anyone-explain
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:utip/providers/tip_calculator_model.dart';
 import 'package:utip/widgets/bill_amt_text_field.dart';
 import 'package:utip/widgets/person_counter.dart';
 import 'package:utip/widgets/tip_percent_slider.dart';
@@ -8,7 +10,16 @@ import 'package:utip/widgets/tip_total_amt.dart';
 import 'package:utip/widgets/total_per_person_header.dart';
 
 void main() {
-  runApp(const MyApp());
+  // as before, we need to wrap this in a change notifier:
+  runApp(
+    ChangeNotifierProvider(
+      // why does he remove the BuildContext type here? It works anyway with
+      // that included...
+      create: (context) => TipCalculatorModel(),
+      child: const MyApp(),
+    ),
+    // const MyApp()
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -35,7 +46,7 @@ class UTip extends StatefulWidget {
 }
 
 class _UTipState extends State<UTip> {
-  // int personCount = 0;
+  int personCount = 0;
   // String now = "";
   // double sliderval = 0.0;
   // double sliderPos = 0;
@@ -73,6 +84,7 @@ class _UTipState extends State<UTip> {
   //   });
   // }
 
+  // not really part of the model
   // void setSliderValue(sliderValue) {
   //   setState(() {
   //     debugPrint("setting to sliderValue of: $sliderValue...");
@@ -130,8 +142,11 @@ class _UTipState extends State<UTip> {
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     // from course material, for comparison (see console logs):
-    double totalPP = totalPerPerson();
-    double totalT = totalTip();
+
+    // and here, I could use the provider.of() ??
+    final providerOfUTIPModel = Provider.of<TipCalculatorModel>(context);
+    double totalPP = providerOfUTIPModel.totalPP;
+    double totalT = providerOfUTIPModel.totalT;
 
     final style = theme.textTheme.titleMedium!.copyWith(
       color: theme.colorScheme.onPrimary,
@@ -141,70 +156,89 @@ class _UTipState extends State<UTip> {
     return Scaffold(
       appBar: AppBar(title: const Text("UTip")),
 
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisSize: MainAxisSize.max,
+      body: //Container(
+          //child: // here, add the Consumer and wrap around the Column, as everything is inside this
+          Consumer<TipCalculatorModel>(
+            builder:
+                (BuildContext ctx, TipCalculatorModel tipModel, Widget? child) {
+                  return (Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisSize: MainAxisSize.max,
 
-        children: [
-          TotalPerPersonHeader(
-            theme: theme,
-            style: style,
-            finalCostPerPersonOutput: finalCostPerPersonOutput,
-          ),
-
-          Padding(
-            padding: const EdgeInsets.all(3.0),
-            child: Container(
-              padding: EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: theme.colorScheme.primary, width: 2),
-              ),
-
-              child: Column(
-                children: [
-                  BillAmtTextField(
-                    personCount: personCount,
-                    tipPercentPerPerson: tipPercentPerPerson,
-                    handleBillAmount: handleBillAmount,
-                  ),
-
-                  PersonCounter(
-                    theme: theme,
-                    personCount: personCount,
-                    onDecrement: decrementCounter,
-                    onIncrement: incrementCounter,
-                  ),
-
-                  // make tip percent display consistent:
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        "Tip percentage:",
-                        style: theme.textTheme.titleMedium,
+                      TotalPerPersonHeader(
+                        theme: theme,
+                        style: style,
+                        finalCostPerPersonOutput:
+                            tipModel.finalCostPerPersonOutput,
                       ),
-                      Text("${tipPercentPerPerson.round()}%"),
+
+                      Padding(
+                        padding: const EdgeInsets.all(3.0),
+                        child: Container(
+                          padding: EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: theme.colorScheme.primary,
+                              width: 2,
+                            ),
+                          ),
+
+                          child: Column(
+                            children: [
+                              BillAmtTextField(
+                                personCount: tipModel.personCount,
+                                tipPercentPerPerson:
+                                    tipModel.tipPercentPerPerson,
+                                handleBillAmount: tipModel.handleBillAmount,
+                              ),
+
+                              PersonCounter(
+                                theme: theme,
+                                personCount: tipModel.personCount,
+                                onDecrement: tipModel.decrementCounter,
+                                onIncrement: tipModel.incrementCounter,
+                              ),
+
+                              // make tip percent display consistent:
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Tip percent:",
+                                    style: theme.textTheme.titleMedium,
+                                  ),
+                                  Text(
+                                    "${tipModel.tipPercentPerPerson.round()}%",
+                                  ),
+                                ],
+                              ),
+
+                              TipTotalAmount(
+                                theme: theme,
+                                finalTipTotalOutput:
+                                    tipModel.finalTipTotalOutput,
+                              ),
+
+                              // Text("Tip: ${tipPercentPerPerson.round()}%"),
+                              // Here, I need to pass in the
+                              TipPercentSlider(
+                                sliderPos: tipModel.sliderPos,
+                                tipPercentPerPerson:
+                                    tipModel.tipPercentPerPerson,
+                                setSliderValue: tipModel.setSliderValue,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
-                  ),
-
-                  TipTotalAmount(
-                    theme: theme,
-                    finalTipTotalOutput: finalTipTotalOutput,
-                  ),
-
-                  // Text("Tip: ${tipPercentPerPerson.round()}%"),
-                  TipPercentSlider(
-                    sliderPos: sliderPos,
-                    tipPercentPerPerson: tipPercentPerPerson,
-                    setSliderValue: setSliderValue,
-                  ),
-                ],
-              ),
-            ),
+                  ));
+                },
           ),
-        ],
-      ),
     );
+    // );
   }
 }
