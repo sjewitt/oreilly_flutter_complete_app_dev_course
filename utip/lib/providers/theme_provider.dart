@@ -22,7 +22,7 @@ class ThemeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // he also provides a convenience method to ge the theme itself:
+  // he also provides a getter for the theme itself:
   ThemeData get currentTheme {
     // if (_isDarkMode) {
     //   return ThemeData.dark();
