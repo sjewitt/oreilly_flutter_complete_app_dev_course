@@ -9,6 +9,7 @@ import 'package:utip/widgets/person_counter.dart';
 import 'package:utip/widgets/tip_percent_slider.dart';
 import 'package:utip/widgets/tip_total_amt.dart';
 import 'package:utip/widgets/total_per_person_header.dart';
+import 'package:utip/widgets/toggle_theme_button.dart';
 
 void main() {
   runApp(
@@ -178,25 +179,25 @@ class _UTipState extends State<UTip> {
   }
 }
 
-class ToggleThemeButton extends StatelessWidget {
-  const ToggleThemeButton({
-    super.key,
-    // required this.providerOfTheme,
-  });
+// class ToggleThemeButton extends StatelessWidget {
+//   const ToggleThemeButton({
+//     super.key,
+//     // required this.providerOfTheme,
+//   });
 
-  // final ThemeProvider providerOfTheme;
+//   // final ThemeProvider providerOfTheme;
 
-  @override
-  Widget build(BuildContext context) {
-    // and he adds the theme provider into the widget itself.
-    // HOWEVER, I have TWO toggle widgets, so this may not be the most efficient way.
-    final providerOfThemeLocal = Provider.of<ThemeProvider>(context);
-    return IconButton(
-      iconSize: 40,
-      onPressed: providerOfThemeLocal.toggleDarkMode,
-      icon: providerOfThemeLocal.isDarkMode
-          ? Icon(Icons.nightlight_outlined)
-          : Icon(Icons.wb_sunny_outlined),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     // and he adds the theme provider into the widget itself.
+//     // HOWEVER, I have TWO toggle widgets, so this may not be the most efficient way.
+//     final providerOfThemeLocal = Provider.of<ThemeProvider>(context);
+//     return IconButton(
+//       iconSize: 40,
+//       onPressed: providerOfThemeLocal.toggleDarkMode,
+//       icon: providerOfThemeLocal.isDarkMode
+//           ? Icon(Icons.nightlight_outlined)
+//           : Icon(Icons.wb_sunny_outlined),
+//     );
+//   }
+// }
