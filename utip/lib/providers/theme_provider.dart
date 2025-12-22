@@ -1,10 +1,6 @@
-// Do we extend a base class here? - it's NOT a model...
-// yes...
 import 'package:flutter/material.dart';
 
-// efficiency of `extends` vs `with`?
 class ThemeProvider extends ChangeNotifier {
-  // brivate var indicating whether dark mode is on:
   bool _isDarkMode = false;
 
   // getters
@@ -12,35 +8,37 @@ class ThemeProvider extends ChangeNotifier {
 
   // methods
   void _toggleDarkMode() {
-    // if (_isDarkMode) {
-    //   _isDarkMode = false;
-    // } else {
-    //   _isDarkMode = true;
-    // }
-    // better syntax from course:
     _isDarkMode = !_isDarkMode;
     notifyListeners();
   }
 
+  bool _toggleDarkModeWithReturnVal() {
+    _isDarkMode = !_isDarkMode;
+    notifyListeners();
+    return _isDarkMode;
+  }
+
   // he also provides a getter for the theme itself:
   ThemeData get currentTheme {
-    // if (_isDarkMode) {
-    //   return ThemeData.dark();
-    // } else {
-    //   return ThemeData.light();
-    // }
-
-    // or, using ternary operator...
-    // I REALLY should use this more often!
     return _isDarkMode ? ThemeData.dark() : ThemeData.light();
   }
 
-  // and the toggle dark mode function we can utilise:
   void toggleDarkMode() {
     _toggleDarkMode();
-    // return ValueChanged<bool>(_isDarkMode);
   }
 
-  // and what do we init()?
+
+
+
+
+  // see https://dart.dev/language/functions#:~:text=To%20define%20a%20default%20value%20for%20a%20named%20parameter
+  // and https://dart.dev/language/functions#return-values
+  toggleDarkModeWithReturnVal() {
+    // bool result = _toggleDarkModeWithReturnVal();
+    // ValueChanged returnval = 
+    // return ValueChanged(result);
+    return _toggleDarkModeWithReturnVal();
+  }
+
   ThemeProvider();
 }
