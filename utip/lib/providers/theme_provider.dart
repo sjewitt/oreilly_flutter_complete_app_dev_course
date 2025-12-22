@@ -27,16 +27,7 @@ class ThemeProvider extends ChangeNotifier {
     _toggleDarkMode();
   }
 
-
-
-
-
-  // see https://dart.dev/language/functions#:~:text=To%20define%20a%20default%20value%20for%20a%20named%20parameter
-  // and https://dart.dev/language/functions#return-values
   toggleDarkModeWithReturnVal() {
-    // bool result = _toggleDarkModeWithReturnVal();
-    // ValueChanged returnval = 
-    // return ValueChanged(result);
     return _toggleDarkModeWithReturnVal();
   }
 

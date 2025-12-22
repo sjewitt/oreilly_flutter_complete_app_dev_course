@@ -68,22 +68,8 @@ class _UTipState extends State<UTip> {
       appBar: AppBar(
         title: const Text("UTip"),
         actions: [
-          // the extract widget at 08:30 is what I missed
-          // he them removes the theme
-          // ToggleThemeButton(providerOfTheme: providerOfTheme),
           ToggleThemeButton(),
-          // and does *something* wit the scope of the theme?? The red error underline is missing required arg of theme provider...
-          // he takes the themeProvider (`providerOfTheme`) from above...
-          
-          // my tests:
-          // take THIS, and amend as pe above - extract ToggleThemeSwitch,
-          // and move the logic to a provider as per above/extracted widget.
           Switch(
-            // this WORKS, but the toggle doesn't change...
-            // onChanged:(value) => {providerOfTheme.toggleDarkModeWithReturnVal()},
-            
-            // onChanged:(value) => {debugPrint(value.toString())},
-            // onChanged: providerOfTheme.toggleDarkModeWithReturnVal(),
             onChanged: (newVal) {
               setState(() { // not sure how to extract this to a provider
                 _testSwitchVal = !_testSwitchVal;
@@ -178,26 +164,3 @@ class _UTipState extends State<UTip> {
     );
   }
 }
-
-// class ToggleThemeButton extends StatelessWidget {
-//   const ToggleThemeButton({
-//     super.key,
-//     // required this.providerOfTheme,
-//   });
-
-//   // final ThemeProvider providerOfTheme;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     // and he adds the theme provider into the widget itself.
-//     // HOWEVER, I have TWO toggle widgets, so this may not be the most efficient way.
-//     final providerOfThemeLocal = Provider.of<ThemeProvider>(context);
-//     return IconButton(
-//       iconSize: 40,
-//       onPressed: providerOfThemeLocal.toggleDarkMode,
-//       icon: providerOfThemeLocal.isDarkMode
-//           ? Icon(Icons.nightlight_outlined)
-//           : Icon(Icons.wb_sunny_outlined),
-//     );
-//   }
-// }

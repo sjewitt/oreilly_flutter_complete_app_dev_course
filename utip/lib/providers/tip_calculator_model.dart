@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class TipCalculatorModel extends ChangeNotifier {
-  /// constructor
-  ///
+  
   TipCalculatorModel();
 
-  /// Local vars:
-  ///
   int _personCount = 0;
   double _sliderval = 0.0;
   double _sliderPos = 0;
@@ -20,13 +17,9 @@ class TipCalculatorModel extends ChangeNotifier {
   String _finalTipPerPersonOutput = "0.00";
   String _finalTipTotalOutput = "0.00";
 
-  /// and from course
-  ///
   double _totalPP = 0;
   double _totalT = 0;
 
-  /// Getters for exposing vars:
-  ///
   int get personCount => _personCount;
   double get sliderval => _sliderval;
   double get sliderPos => _sliderPos;
@@ -34,21 +27,14 @@ class TipCalculatorModel extends ChangeNotifier {
   double get tipPerPerson => _tipPerPerson;
   double get tipTotal => _tipTotal;
   double get costPerPerson => _costPerPerson;
-  // double get costPerPerson =>
-  //     ((_totalCost * (_tipPercentPerPerson / 100)) + (_totalCost)) /
-  //     (_personCount);
   double get totalCost => _totalCost;
   String get finalCostPerPersonOutput => _finalCostPerPersonOutput;
   String get finalTipPerPersonOutput => _finalTipPerPersonOutput;
   String get finalTipTotalOutput => _finalTipTotalOutput;
 
-  /// and getters for course equivalents (to confirm when I actually watch...)
-  ///
   double get totalPP => _totalPP;
   double get totalT => _totalT;
 
-  /// Functions for setting the local vars:
-  // person counter handlers:
   void decrementCounter() {
     if (_personCount > 1) _personCount--;
     handleBillAmount(totalCost);
@@ -69,9 +55,6 @@ class TipCalculatorModel extends ChangeNotifier {
   }
 
   // These need to convert to getters
-  // course equivalents, for comparison (add logging to check):
-  // the getter may also directly return the calculation:
-  //
   void totalPerPerson() {
     _totalPP =
         ((_totalCost * (_tipPercentPerPerson / 100)) + (_totalCost)) /
