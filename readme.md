@@ -1379,4 +1379,24 @@ A Collection to organize classes?
  - list manipulation
  - generics
 
+ Hmm. he notes that if the array is untyped:
+ 
+ var x = ['x','y'];
+ 
+ that this will imply that ALL indicies should be strings. But that is not so...
+ 
+## 8.5
+ 
+ List manipulation
+ 
+ 
+ 
+## 8.6 providers
+
+ - _private vs public vars
+ - getters
+ - functions
+ - in the runApp - is where we need to wrap with a change notified widget - which gives us access to the provider data and methods: 
+ 
+ Oddness with BuildContext, or not. See notes in code.
  
