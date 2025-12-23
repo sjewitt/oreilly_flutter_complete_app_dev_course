@@ -1372,6 +1372,11 @@ can also use super.toString() if subclass instance has overridden a toString() m
 ## 8.3 lists and loops
 
 A Collection to organize classes?
- - 
+ - see dartpad code
+ 
+## 8.4 lists and loops 2
+
+ - list manipulation
+ - generics
 
  
