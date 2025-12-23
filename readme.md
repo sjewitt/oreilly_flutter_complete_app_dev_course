@@ -1367,5 +1367,11 @@ can also use super.toString() if subclass instance has overridden a toString() m
    hmm... `stf` no longer brings up the flutter options
    ARGH!! Its actually INLINE autocomplete!! So not broken after all :-)
    
-   
+ Builds a simple list o movie titles. The key takehome in this section is the CONTEXT includes the scope for the text array from which the data is pushed to the Text() within the loop
+ 
+## 8.3 lists and loops
+
+A Collection to organize classes?
+ - 
+
  
