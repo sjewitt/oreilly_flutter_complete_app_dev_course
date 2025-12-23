@@ -1347,3 +1347,25 @@ what he is actually doing here is to call super INSIDE the subclass - so it look
 
 Does indeed stringify the object...
 can also use super.toString() if subclass instance has overridden a toString() method
+
+
+## 8.1 movie app demo
+
+## 8.2 create project
+
+ - flutter create ...
+ - set up provider up-front!!
+ 
+ install provider up-front:
+ from VSCode - 'add' ->
+  for add/assist pubspec:
+  (does not exist in VSCode any more. Doing it manually...)
+   - add to dependencies: node in yaml file:
+   
+   `provider: ^6.1.1`
+   
+   hmm... `stf` no longer brings up the flutter options
+   ARGH!! Its actually INLINE autocomplete!! So not broken after all :-)
+   
+   
+ 
